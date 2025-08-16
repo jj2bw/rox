@@ -20,7 +20,7 @@ class ProfileModel
     public function __construct(
         FormFactoryInterface $formFactory,
         EntityManagerInterface $entityManager,
-        Mailer $mailer
+        Mailer $mailer,
     ) {
         $this->formFactory = $formFactory;
         $this->entityManager = $entityManager;
