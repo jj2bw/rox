@@ -60,6 +60,7 @@ jobs:
 
       - name: Upgrade composer dependencies
         run: composer update --prefer-stable --prefer-dist --no-interaction
+        continue-on-error: true
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e  # tag=v7.0.8
