@@ -1,0 +1,53 @@
+name: composer-update
+
+on:
+  push:
+  workflow_dispatch:
+  # Run weekly
+  schedule:
+    - cron: 0 2 0 * *
+
+env:
+  PHP_VERSION: 8.3
+
+permissions:
+  contents: read
+
+jobs:
+  update:
+    name: composer-update
+    runs-on: ubuntu-latest
+    # To create PR
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # tag=v4.2.2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@ccf2c627fe61b1b4d924adfcbd19d661a18133a0  # tag=2.35.2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xml, xmlwriter, xsl, zip
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809  # tag=v4.2.4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Upgrade composer dependencies
+        run: composer update --prefer-stable --prefer-dist --no-interaction
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e  # tag=v7.0.8
+        with:
+          title: "[chore] Automatic scheduled composer upgrade"
+          commit-message: "Automatic composer upgrade"
+          branch: "composer-upgrade"
