@@ -21,6 +21,22 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+
+    env:
+      MAILER_DSN: 'smtp://localhost:1025'
+      DATABASE_URL: 'mysql://bewelcome:bewelcome@127.0.0.1:3306/bewelcome'
+      APP_ENV: 'test'
+    services:
+      db:
+        image: mariadb:10.1.41
+        env:
+          MYSQL_ROOT_PASSWORD: bewelcome_root_dev
+          MYSQL_DATABASE: bewelcome
+          MYSQL_USER: bewelcome
+          MYSQL_PASSWORD: bewelcome
+        ports:
+          - 3306:3306
+
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # tag=v4.2.2
