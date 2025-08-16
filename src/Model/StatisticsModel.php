@@ -420,14 +420,13 @@ class StatisticsModel
         $result = array_slice($resultSet, 0, $count);
         $keys = array_keys($resultSet);
         for ($i = $count; $i < count($keys); $i++) {
-           if (!isset($result[$other])) {
-               $result[$other] = 0;
-           }
-           $result[$other] += $resultSet[$keys[$i]];
+            if (!isset($result[$other])) {
+                $result[$other] = 0;
+            }
+            $result[$other] += $resultSet[$keys[$i]];
         }
 
         return $result;
-
     }
 
     /**

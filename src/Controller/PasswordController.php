@@ -191,7 +191,7 @@ class PasswordController extends AbstractController
     }
 
     #[Route(path: 'password/check/', name: 'check_password')]
-    public function checkPassword(Request $request) : JsonResponse
+    public function checkPassword(Request $request): JsonResponse
     {
         $username = $request->get('username');
         $email = $request->get('email');

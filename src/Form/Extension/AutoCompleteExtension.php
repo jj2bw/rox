@@ -92,7 +92,7 @@ class AutoCompleteExtension extends AbstractTypeExtension
 
         if ($options['autocomplete_choices']) {
             $autocompleteChoices = [];
-            foreach($options['autocomplete_choices'] as $choice) {
+            foreach ($options['autocomplete_choices'] as $choice) {
                 $autocompleteChoice = new \stdClass();
                 $autocompleteChoice->title = $choice;
                 $autocompleteChoices[] = $autocompleteChoice;

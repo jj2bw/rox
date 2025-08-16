@@ -43,11 +43,11 @@ class RequestController extends BaseRequestAndInvitationController
     private Logger $logger;
 
     public function __construct(
-        ConversationModel      $conversationModel,
-        HostingRequestModel    $requestModel,
+        ConversationModel $conversationModel,
+        HostingRequestModel $requestModel,
         EntityManagerInterface $entityManager,
-        Mailer                 $mailer,
-        Logger                 $logger
+        Mailer $mailer,
+        Logger $logger
     ) {
         parent::__construct($requestModel, $entityManager);
 

@@ -770,14 +770,14 @@ class MyDataMockups implements MockupProviderInterface
                         'shortCode' => 'en',
                         'Language' => ['WordCode' => 'lang_pt'],
                         'created' => (new DateTime())->format('Y-m-d'),
-                    ],
-                    [
+                     ],
+                     [
                         'code' => 'mydata.translations.abstract',
                         'Sentence' => 'Traducions',
                         'shortCode' => 'en',
                         'Language' => ['WordCode' => 'lang_es'],
                         'created' => (new DateTime())->format('Y-m-d'),
-                    ],
+                     ],
                  ],
              ]);
         }
