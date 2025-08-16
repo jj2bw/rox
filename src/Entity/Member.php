@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -7,21 +8,17 @@
 
 namespace App\Entity;
 
-use App\Doctrine\AccommodationType;
 use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\LanguageLevelType;
 use App\Doctrine\MemberStatusType;
-use App\Doctrine\TypicalOfferType;
 use App\Repository\MemberRepository;
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherAwareInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -77,7 +74,7 @@ class Member
     protected string $email;
 
     #[ORM\Column(name: 'LastLogin', type: 'datetime', nullable: true)]
-    protected ?DateTime $lastLogin = null;
+    protected ?\DateTime $lastLogin = null;
 
     #[ORM\Column(name: 'PassWord', type: 'string', length: 100, nullable: true)]
     protected ?string $password = null;
@@ -88,7 +85,7 @@ class Member
     protected int $id;
 
     #[ORM\Column(name: 'Status', type: 'member_status', nullable: false)]
-    private string $status = "";
+    private string $status = '';
 
     #[ORM\JoinColumn(name: 'IdCity', referencedColumnName: 'geonameId', nullable: true)]
     #[ORM\ManyToOne(targetEntity: \NewLocation::class)]
@@ -149,10 +146,10 @@ class Member
     private int $otherRestrictions = 0;
 
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
-    private DateTime $updated;
+    private \DateTime $updated;
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private DateTime $created;
+    private \DateTime $created;
 
     #[ORM\Column(name: 'ProfileSummary', type: 'integer', nullable: false)]
     private int $profileSummary = 0;
@@ -173,7 +170,7 @@ class Member
     private string $hideAge = 'No';
 
     #[ORM\Column(name: 'BirthDate', type: 'date', nullable: true)]
-    private ?DateTime $birthdate = null;
+    private ?\DateTime $birthdate = null;
 
     #[ORM\Column(name: 'AdressHidden', type: 'string', nullable: false)]
     private string $adressHidden = 'Yes';
@@ -242,7 +239,7 @@ class Member
     private int $chatGoogle = 0;
 
     #[ORM\Column(name: 'LastSwitchToActive', type: 'datetime', nullable: true)]
-    private ?DateTime $lastSwitchToActive = null;
+    private ?\DateTime $lastSwitchToActive = null;
 
     #[ORM\Column(name: 'bewelcomed', type: 'boolean', nullable: false)]
     private bool $beWelcomed = false;
@@ -309,6 +306,22 @@ class Member
         $this->comments = new ArrayCollection();
         $this->relations = new ArrayCollection();
         $this->preferences = new ArrayCollection();
+    }
+
+    public function __serialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'username' => $this->username,
+            'password' => $this->password,
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->id = $data['id'];
+        $this->username = $data['username'];
+        $this->password = $data['password'];
     }
 
     public function setUsername(string $username): self
@@ -586,7 +599,7 @@ class Member
         return null;
     }
 
-    public function setLastLogin(?DateTime $lastLogin): self
+    public function setLastLogin(?\DateTime $lastLogin): self
     {
         $this->lastLogin = $lastLogin;
 
@@ -659,7 +672,7 @@ class Member
 
     public function getShowGender(): bool
     {
-        return $this->hideGender === 'No';
+        return 'No' === $this->hideGender;
     }
 
     public function setShowAge(bool $show): self
@@ -671,10 +684,10 @@ class Member
 
     public function getShowAge(): string
     {
-        return $this->hideAge === 'No';
+        return 'No' === $this->hideAge;
     }
 
-    public function setBirthdate(DateTime $birthdate): self
+    public function setBirthdate(\DateTime $birthdate): self
     {
         $this->birthdate = $birthdate;
 
@@ -818,14 +831,14 @@ class Member
         return $this->movies;
     }
 
-    public function setLastSwitchToActive(?DateTime $lastSwitchToActive): self
+    public function setLastSwitchToActive(?\DateTime $lastSwitchToActive): self
     {
         $this->lastSwitchToActive = $lastSwitchToActive;
 
         return $this;
     }
 
-    public function getLastSwitchToActive(): ?DateTime
+    public function getLastSwitchToActive(): ?\DateTime
     {
         return $this->lastSwitchToActive;
     }
@@ -864,24 +877,7 @@ class Member
             $this->id,
             $this->username,
             $this->password,
-            ) = unserialize($serialized);
-    }
-
-
-    public function __serialize(): array
-    {
-        return [
-            'id' => $this->id,
-            'username' => $this->username,
-            'password' => $this->password,
-        ];
-    }
-
-    public function __unserialize(array $data): void
-    {
-        $this->id = $data['id'];
-        $this->username = $data['username'];
-        $this->password = $data['password'];
+        ) = unserialize($serialized);
     }
 
     public function getRoles(): array
@@ -1078,8 +1074,8 @@ class Member
         /** @var RightVolunteer $volunteerRight */
         foreach ($volunteerRights->getIterator() as $volunteerRight) {
             if ($volunteerRight->getRight()->getName() === $nameOfRight) {
-               $hasRight = true;
-               break;
+                $hasRight = true;
+                break;
             }
         }
 
@@ -1094,7 +1090,7 @@ class Member
         /* \todo find way to define rights name */
         /** @var RightVolunteer $volunteerRight */
         foreach ($volunteerRights->getIterator() as $volunteerRight) {
-            if ($volunteerRight->getRight()->getName() === 'Words') {
+            if ('Words' === $volunteerRight->getRight()->getName()) {
                 $strScope = str_replace('"', '', str_replace(',', ';', $volunteerRight->getScope()));
                 $scope = explode(';', $strScope);
                 if (\in_array($locale, $scope, true)) {
@@ -1185,7 +1181,7 @@ class Member
 
     public function isDeniedAccess(): bool
     {
-        return !in_array(
+        return !\in_array(
             $this->status,
             [
                 MemberStatusType::ACTIVE,
@@ -1226,14 +1222,15 @@ class Member
     {
         return array_filter(
             $this->languageLevels->toArray(),
-            function (/** @var MembersLanguagesLevel */ $k) {
+            function (/* @var MembersLanguagesLevel */ $k) {
                 try {
                     // Make sure language exists in database
                     $language = $k->getLanguage();
                     $language->getName();
-                } catch(Exception $e) {
+                } catch (\Exception $e) {
                     return false;
                 }
+
                 return true;
             }
         );
@@ -1317,7 +1314,7 @@ class Member
     #[ORM\PrePersist]
     public function onPrePersist(): void
     {
-        $this->created = new DateTime('now');
+        $this->created = new \DateTime('now');
         $this->updated = $this->created;
     }
 
@@ -1327,7 +1324,7 @@ class Member
     #[ORM\PreUpdate]
     public function onPreUpdate()
     {
-        $this->updated = new DateTime('now');
+        $this->updated = new \DateTime('now');
     }
 
     public function getPreferredLanguage(): ?Language
@@ -1516,7 +1513,7 @@ class Member
             $name .= $this->firstName . ' ';
         }
         if (!($this->hideAttribute & self::MEMBER_SECONDNAME_HIDDEN)) {
-            $name .= $this->secondName. ' ';
+            $name .= $this->secondName . ' ';
         }
         if (!($this->hideAttribute & self::MEMBER_LASTNAME_HIDDEN)) {
             $name .= $this->lastName;
